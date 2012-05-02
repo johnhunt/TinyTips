@@ -9,11 +9,11 @@
 	$.fn.tinyTips = function(options) {
 		
 		var defaults = {
-			content: 'title',
-			style: 'light'
+			content: 'title'
 		};
 		
-		var options = $.extend({}, defaults, options);
+
+		var options = $.extend(defaults, options);
 		var markup = '<div id="tinytip" class="' + options.style + '"><div id="tipcontent"></div><div id="tiparrow"></div></div>';
 		var target = $(this);
 		var title;
