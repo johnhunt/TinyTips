@@ -9,7 +9,8 @@
   $.fn.tinyTips = function(options) {
     
     var defaults = {
-      content: 'title'
+      content: 'title',
+      position: 'top'
     };
     
     var options = $.extend(defaults, options);
@@ -19,16 +20,26 @@
 
     $(this).on("mouseover", function() {
 
+      console.log($(this).attr('tt'));
+
+      $('#tinytip').append($(this).attr('tt'));
+
       var pos = $(this).position();
 
       var target = {
         y: pos.top,
         x: pos.left,
         w: $(this).outerWidth(),
-        h: $(this).outerHeight()
+        h: $(this).outerHeight(),
+        c: $(this).outerWidth()/2
       };
 
-      console.log(target);
+      var tooltip = {
+        top: {
+          y: target.y-20,
+          x: target.x
+        }
+      };
 
     });
   }
