@@ -8,6 +8,4 @@ h1								{ text-align: center; line-height: 15px; padding: 0 0 20px 0; letter-s
 .massive					{ font-size: 72px; line-height: 10px; padding: 0; letter-spacing: -6px; color: #f4c20a; }
 #demo_wrapper			{ width: 600px; margin: 30px auto 0 auto; }
 
-
-
 #tinytip					{ position: absolute; top: 0; left: 0; max-width: 500px; display: block; z-index: 100; background: #000000; border: 1px solid #ffffff; border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; padding: 3px 5px 3px 5px; }

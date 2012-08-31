@@ -23,7 +23,6 @@
 
 		// Calculates where to put the tip to keep it from extending off screen. 
 		calcPos = function(side, target, tip) {
-
 				var posX;
 				var posY;
 				var winW = $(window).width();
@@ -34,7 +33,7 @@
 					y: 0
 				};
 
-				// Set X for top and bottom tips.
+				// Set X for TOP and BOTTOM
 				if (side === 'top' || side === 'bottom') {
 
 					posX = target.x-(tip.outerWidth()/2)+(target.w/2);
@@ -51,7 +50,7 @@
 
 				}
 
-				// Set Y for left and right tips.
+				// Set Y for LEFT and RIGHT
 				if (side === 'left' || side === 'right') {
 					finalPos.y = target.y+(tip.outerHeight()/2)+(target.h/2);
 				}
