@@ -11,7 +11,8 @@
 		var defaults = {
 			content: 'title',
 			position: 'top',
-			spacing: 8
+			spacing: 8,
+			transition: 'fade'
 		};
 		
 		options = $.extend(defaults, options);
@@ -20,7 +21,7 @@
 		var tip = $('#tinytip');
 		tip.hide();
 
-		// Calculates where to put the tip to keep it from extending off screen.
+		// Calculates where to put the tip to keep it from extending off screen. 
 		calcPos = function(side, target, tip) {
 
 				var posX;
@@ -71,10 +72,8 @@
 					posY = target.y+tip.outerHeight()+target.h+options.spacing;
 
 					if (posY+tip.outerHeight() > winH+winS) {
-						console.log("Overflow Bottom");
 						finalPos.y = target.y-options.spacing; 
 					} else {
-						console.log("No Overflow");
 						finalPos.y = posY;
 					}
 
@@ -127,13 +126,23 @@
 				h: tip.outerHeight()
 			}
 
-			tip.css({top: tt.y-tt.h, left: tt.x});
-			tip.show();
+			// Animate tip
+			if (options.position === 'top') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h+options.spacing, left: tt.x});
+			} else if (options.position === 'bottom') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h-options.spacing, left: tt.x});
+			} else if (options.position === 'left') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h, left: tt.x+options.spacing});
+			} else if (options.position === 'right') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h, left: tt.x-options.spacing});
+			}
+			
+			tip.animate({top: tt.y-tt.h, left: tt.x, opacity: 1});
 
 		});
 
 		$(this).on("mouseout", function() {
-			tip.hide();
+			tip.stop().hide();
 			tip.text("");
 		});
 	};
