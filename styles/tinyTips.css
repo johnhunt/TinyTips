@@ -1,5 +1,6 @@
 ﻿@charset "utf-8";
 
+<<<<<<< HEAD
 html							{ margin: 0; padding: 0; font-family: "Lucida Sans Unicode"; font-size: 14px; line-height: 21px; color: #f1f1f1; background: #0b0b0b; }
 body							{ margin: 0; padding: 0; }
 p									{ color: #616161; }
@@ -9,3 +10,13 @@ h1								{ text-align: center; line-height: 15px; padding: 0 0 20px 0; letter-s
 #demo_wrapper			{ width: 600px; margin: 30px auto 0 auto; }
 
 #tinytip					{ position: absolute; top: 0; left: 0; max-width: 500px; display: block; z-index: 100; background: #000000; border: 1px solid #ffffff; border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; padding: 3px 5px 3px 5px; }
+=======
+html							{ margin: 0px; padding: 0px; font-family: "Lucida Sans Unicode"; font-size: 14px; line-height: 21px; color: #f1f1f1; background: #0b0b0b; }
+body							{ margin: 0px; padding: 0px; position: relative; }
+p								{ color: #616161; }
+a								{ color: #f1f1f1; }
+img.tTip						{ margin: 8px 15px 8px 0px; float: left; }
+h1								{ text-align: center; line-height: 15px; padding: 0px 0px 20px 0px; letter-spacing: -2px; }
+h1.massive						{ font-size: 72px; line-height: 10px; padding: 0px; letter-spacing: -6px; color: #f4c20a; }
+#demo_wrapper					{ width: 600px; margin: 30px auto 0px auto; }
+>>>>>>> core
