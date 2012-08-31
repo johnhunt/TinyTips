@@ -1,6 +1,6 @@
 /***********************************************************/
 /*                    TinyTips Plugin                      */
-/*                       ersion: 1.3                       */
+/*                      Version: 1.3                       */
 /*                      Mike Merritt                       */
 /*         https://github.com/mikemerritt/TinyTips         */
 /***********************************************************/
@@ -10,7 +10,8 @@
 		
 		var defaults = {
 			content: 'title',
-			position: 'top'
+			position: 'top',
+			spacing: 8
 		};
 		
 		options = $.extend(defaults, options);
@@ -19,8 +20,93 @@
 		var tip = $('#tinytip');
 		tip.hide();
 
+		// Calculates where to put the tip to keep it from extending off screen.
+		calcPos = function(side, target, tip) {
+
+				var posX;
+				var posY;
+				var winW = $(window).width();
+				var winH = $(window).height();
+				var winS = $(window).scrollTop();
+				var finalPos = {
+					x: 0,
+					y: 0
+				};
+
+				// Set X for top and bottom tips.
+				if (side === 'top' || side === 'bottom') {
+
+					posX = target.x-(tip.outerWidth()/2)+(target.w/2);
+
+					if (posX+tip.outerWidth() > winW) {
+						var diffX = posX+tip.outerWidth() - winW;
+						finalPos.x = posX-diffX;
+					} else if (posX < 0) {
+						var diffX = Math.abs(posX);
+						finalPos.x = posX+diffX;
+					} else {
+						finalPos.x = posX;
+					}
+
+				}
+
+				// Set Y for left and right tips.
+				if (side === 'left' || side === 'right') {
+					finalPos.y = target.y+(tip.outerHeight()/2)+(target.h/2);
+				}
+				
+				// Set Y for TOP
+				if (side === 'top') {
+					posY = target.y-options.spacing;
+
+					if (posY-tip.outerHeight() < 0+winS) {
+						var diffY = posY-tip.outerHeight();
+						finalPos.y = target.y+tip.outerHeight()+target.h+options.spacing;
+					} else {
+						finalPos.y = posY;
+					}
+
+				// Set Y for BOTTOM
+				} else if (side === 'bottom') {
+					posY = target.y+tip.outerHeight()+target.h+options.spacing;
+
+					if (posY+tip.outerHeight() > winH+winS) {
+						console.log("Overflow Bottom");
+						finalPos.y = target.y-options.spacing; 
+					} else {
+						console.log("No Overflow");
+						finalPos.y = posY;
+					}
+
+				// Set X for LEFT
+				} else if (side === 'left') {
+					posX = target.x-tip.outerWidth()-options.spacing;
+					
+					if (posX < 0) {
+						finalPos.x = target.x+target.w+options.spacing
+					} else {
+						finalPos.x = posX;
+					}
+
+				// Set X for RIGHT
+				} else if (side === 'right') {
+					posX = target.x+target.w+options.spacing;
+
+					if (posX+tip.outerWidth() > winW) {
+						finalPos.x = target.x-tip.outerWidth()-options.spacing;
+					} else {
+						finalPos.x = posX;
+					}
+
+				}
+
+				return finalPos;
+
+			}
+
 		$(this).on("mouseover", function() {
 
+			tip.css({top: 0, left: 0});
 			tip.append($(this).attr('tt'));
 
 			var pos = $(this).position();
@@ -32,21 +118,17 @@
 				h: $(this).outerHeight()
 			};
 
+			var ttPos = calcPos(options.position, target, tip);
+
 			var tt = {
-				top: {
-					y: target.y-5,
-					x: target.x-(tip.outerWidth()/2)+(target.w/2)
-				},
-				bot: {
-					y: target.y+tip.outerHeight()+target.h+5,
-					x: target.x-(tip.outerWidth()/2)+(target.w/2)
-				},
+				x: ttPos.x,
+				y: ttPos.y,
 				w: tip.outerWidth(),
 				h: tip.outerHeight()
-			};
+			}
 
+			tip.css({top: tt.y-tt.h, left: tt.x});
 			tip.show();
-			tip.css({top: tt.top.y-tt.h, left: tt.top.x});
 
 		});
 
