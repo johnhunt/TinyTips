@@ -9,103 +9,107 @@
 	$.fn.tinyTips = function(options) {
 		
 		var defaults = {
-			content: 'title',
+			content: 'tt',
 			position: 'top',
 			spacing: 8,
-			transition: 'fade'
+			transition: 'fade',
+			arrow: true
 		};
 		
 		options = $.extend(defaults, options);
-		var markup = '<div id="tinytip"></div>';
-		$('body').append(markup);
-		var tip = $('#tinytip');
-		tip.hide();
+		var markup = '<div id="tinytip"><div class="arrow"></div></div>';
+		var tip;
 
 		// Calculates where to put the tip to keep it from extending off screen. 
 		calcPos = function(side, target, tip) {
-				var posX;
-				var posY;
-				var winW = $(window).width();
-				var winH = $(window).height();
-				var winS = $(window).scrollTop();
-				var finalPos = {
-					x: 0,
-					y: 0
-				};
 
-				// Set X for TOP and BOTTOM
-				if (side === 'top' || side === 'bottom') {
+			var finalPos = {
+				x: 0,
+				y: 0,
+				fPos: '',
+			};
 
-					posX = target.x-(tip.outerWidth()/2)+(target.w/2);
-
-					if (posX+tip.outerWidth() > winW) {
-						var diffX = posX+tip.outerWidth() - winW;
-						finalPos.x = posX-diffX;
-					} else if (posX < 0) {
-						var diffX = Math.abs(posX);
-						finalPos.x = posX+diffX;
-					} else {
-						finalPos.x = posX;
-					}
-
-				}
-
-				// Set Y for LEFT and RIGHT
-				if (side === 'left' || side === 'right') {
-					finalPos.y = target.y+(tip.outerHeight()/2)+(target.h/2);
-				}
-				
-				// Set Y for TOP
-				if (side === 'top') {
-					posY = target.y-options.spacing;
-
-					if (posY-tip.outerHeight() < 0+winS) {
-						var diffY = posY-tip.outerHeight();
-						finalPos.y = target.y+tip.outerHeight()+target.h+options.spacing;
-					} else {
-						finalPos.y = posY;
-					}
-
-				// Set Y for BOTTOM
-				} else if (side === 'bottom') {
-					posY = target.y+tip.outerHeight()+target.h+options.spacing;
-
-					if (posY+tip.outerHeight() > winH+winS) {
-						finalPos.y = target.y-options.spacing; 
-					} else {
-						finalPos.y = posY;
-					}
-
-				// Set X for LEFT
-				} else if (side === 'left') {
-					posX = target.x-tip.outerWidth()-options.spacing;
-					
-					if (posX < 0) {
-						finalPos.x = target.x+target.w+options.spacing
-					} else {
-						finalPos.x = posX;
-					}
-
-				// Set X for RIGHT
-				} else if (side === 'right') {
-					posX = target.x+target.w+options.spacing;
-
-					if (posX+tip.outerWidth() > winW) {
-						finalPos.x = target.x-tip.outerWidth()-options.spacing;
-					} else {
-						finalPos.x = posX;
-					}
-
-				}
-
-				return finalPos;
-
+			var posCheck = {
+				top: true,
+				bottom: true,
+				left: true,
+				right: true
 			}
+
+			var pos = {
+				top: {
+					x: target.x-(tip.outerWidth()/2)+(target.w/2),
+					y: target.y-options.spacing
+				},
+				right: {
+					x: target.x+target.w+options.spacing,
+					y: target.y+(tip.outerHeight()/2)+(target.h/2)
+				},
+				bottom: {
+					x: target.x-(tip.outerWidth()/2)+(target.w/2),
+					y: target.y+tip.outerHeight()+target.h+options.spacing
+				},
+				left: {
+					x: target.x-tip.outerWidth()-options.spacing,
+					y: target.y+(tip.outerHeight()/2)+(target.h/2)
+				}
+			};
+
+			if (pos.top.y-tip.outerHeight() < $(window).scrollTop()) {
+				posCheck.top = false;
+			}
+
+			if (pos.bottom.y+tip.outerHeight() > $(window).height()+$(window).scrollTop()) {
+				posCheck.bottom = false;
+			}
+			
+			if (pos.left.x < 0) {
+				posCheck.left = false;
+			}
+
+			if (pos.right.x+tip.outerWidth() < $(window).width) {
+				posCheck.right = false;
+			}
+
+			if (side === 'top' || side ==='bottom') {
+				if (pos.top.x < 0) {
+					posCheck.top = false;
+					posCheck.bottom = false;
+				} else if (pos.top.x+tip.outerWidth() > $(window).width()) {
+					posCheck.top = false;
+					posCheck.bottom = false;
+				}
+			}
+
+			if (posCheck[side] === true) {
+				finalPos.x = pos[side].x;
+				finalPos.y = pos[side].y;
+				finalPos.fPos = side;
+				return finalPos;
+			} else {
+				for(var s in posCheck) {
+					if (posCheck[s] === true) {
+						finalPos.x = pos[s].x;
+						finalPos.y = pos[s].y;
+						finalPos.fPos = s;
+						break;
+					}
+				}
+				return finalPos;
+			}
+
+		}
 
 		$(this).on("mouseover", function() {
 
+			$('body').prepend(markup);
+			tip = $('#tinytip');
+			tip.hide()
+
 			tip.css({top: 0, left: 0});
 			tip.append($(this).attr('tt'));
+
+			target.
 
 			var pos = $(this).position();
 
@@ -122,18 +126,42 @@
 				x: ttPos.x,
 				y: ttPos.y,
 				w: tip.outerWidth(),
-				h: tip.outerHeight()
+				h: tip.outerHeight(),
+				arX: ttPos.arX,
+				arY: ttPos.arY,
+				fPos: ttPos.fPos
+			}
+
+			if (options.arrow === true) {
+				finalSpacing = options.arrow+6;
+
+				if (options.position === 'top') {
+					$('#tinytip .arrow').css({
+						border: 'solid',  
+						content: '', 
+						display: 'block', 
+						position: 'absolute', 
+						zIndex: 101, 
+						borderColor: 'rgba(0, 0, 0, 0.8) transparent', 
+						borderWidth: '6px 6px 0 6px', 
+						bottom: '-6px',
+						left: '50%'
+					});
+				}
+			} else {
+				finalSpacing = options.arrow;
+				$('#tinytip .arrow').remove();
 			}
 
 			// Animate tip
 			if (options.position === 'top') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h+options.spacing, left: tt.x});
+				tip.show().css({opacity: 0, top: tt.y-tt.h+options.spacing+'px', left: tt.x+'px'});
 			} else if (options.position === 'bottom') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h-options.spacing, left: tt.x});
+				tip.show().css({opacity: 0, top: tt.y-tt.h-options.spacing+'px', left: tt.x+'px'});
 			} else if (options.position === 'left') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h, left: tt.x+options.spacing});
+				tip.show().css({opacity: 0, top: tt.y-tt.h+'px', left: tt.x+options.spacing+'px'});
 			} else if (options.position === 'right') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h, left: tt.x-options.spacing});
+				tip.show().css({opacity: 0, top: tt.y-tt.h+'px', left: tt.x-options.spacing+'px'});
 			}
 			
 			tip.animate({top: tt.y-tt.h, left: tt.x, opacity: 1});
@@ -143,6 +171,8 @@
 		$(this).on("mouseout", function() {
 			tip.stop().hide();
 			tip.text("");
+			tip.remove();
+
 		});
 	};
 })(jQuery);
