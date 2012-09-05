@@ -95,9 +95,8 @@
 						break;
 					}
 				}
-				return finalPos;
 			}
-
+			return finalPos;
 		}
 
 		$(this).on("mouseover", function() {
@@ -108,8 +107,6 @@
 
 			tip.css({top: 0, left: 0});
 			tip.append($(this).attr('tt'));
-
-			target.
 
 			var pos = $(this).position();
 
@@ -127,41 +124,57 @@
 				y: ttPos.y,
 				w: tip.outerWidth(),
 				h: tip.outerHeight(),
-				arX: ttPos.arX,
-				arY: ttPos.arY,
 				fPos: ttPos.fPos
 			}
 
+			// Place arrow
 			if (options.arrow === true) {
-				finalSpacing = options.arrow+6;
+				finalSpacing = (options.spacing+6)/2;
 
-				if (options.position === 'top') {
+				if (tt.fPos === 'top') {					
 					$('#tinytip .arrow').css({
-						border: 'solid',  
-						content: '', 
-						display: 'block', 
-						position: 'absolute', 
-						zIndex: 101, 
 						borderColor: 'rgba(0, 0, 0, 0.8) transparent', 
 						borderWidth: '6px 6px 0 6px', 
 						bottom: '-6px',
 						left: '50%'
 					});
+				} else if (tt.fPos === 'bottom') {
+					$('#tinytip .arrow').css({
+						borderColor: 'transparent transparent rgba(0, 0, 0, 0.8) transparent', 
+						borderWidth: '0 6px 6px 6px', 
+						top: '-6px',
+						left: '50%'
+					});
+				} else if (tt.fPos === 'left') {
+					$('#tinytip .arrow').css({
+						borderColor: 'transparent transparent transparent rgba(0, 0, 0, 0.8)', 
+						borderWidth: '6px 0 6px 6px', 
+						top: ((tt.h/2)-6)+'px',
+						right: '-6px'
+					});
+				} else if (tt.fPos === 'right') {
+					$('#tinytip .arrow').css({
+						borderColor: 'transparent rgba(0, 0, 0, 0.8) transparent transparent', 
+						borderWidth: '6px 6px 6px 0', 
+						top: ((tt.h/2)-6)+'px',
+						left: '-6px'
+					});
 				}
-			} else {
-				finalSpacing = options.arrow;
+
+			} else if (options.arrow === false) {
+				finalSpacing = options.spacing/2;
 				$('#tinytip .arrow').remove();
 			}
 
 			// Animate tip
-			if (options.position === 'top') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h+options.spacing+'px', left: tt.x+'px'});
-			} else if (options.position === 'bottom') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h-options.spacing+'px', left: tt.x+'px'});
-			} else if (options.position === 'left') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h+'px', left: tt.x+options.spacing+'px'});
-			} else if (options.position === 'right') {
-				tip.show().css({opacity: 0, top: tt.y-tt.h+'px', left: tt.x-options.spacing+'px'});
+			if (tt.fPos === 'top') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h+finalSpacing+'px', left: tt.x+'px'});
+			} else if (tt.fPos === 'bottom') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h-finalSpacing+'px', left: tt.x+'px'});
+			} else if (tt.fPos === 'left') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h+'px', left: tt.x+finalSpacing+'px'});
+			} else if (tt.fPos === 'right') {
+				tip.show().css({opacity: 0, top: tt.y-tt.h+'px', left: tt.x-finalSpacing+'px'});
 			}
 			
 			tip.animate({top: tt.y-tt.h, left: tt.x, opacity: 1});
