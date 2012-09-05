@@ -13,7 +13,8 @@
 			position: 'top',
 			spacing: 8,
 			transition: 'fade',
-			arrow: true
+			arrow: true,
+			arrowColor: 'rgba(0, 0, 0, 0.8)'
 		};
 		
 		options = $.extend(defaults, options);
@@ -67,11 +68,12 @@
 				posCheck.left = false;
 			}
 
-			if (pos.right.x+tip.outerWidth() < $(window).width) {
+
+			if (pos.right.x+tip.outerWidth() > $(window).width()) {
 				posCheck.right = false;
 			}
 
-			if (side === 'top' || side ==='bottom') {
+			if (side === 'top' || side ==='bottom' || posCheck.left === false || posCheck.right === false) {
 				if (pos.top.x < 0) {
 					posCheck.top = false;
 					posCheck.bottom = false;
@@ -133,21 +135,21 @@
 
 				if (tt.fPos === 'top') {					
 					$('#tinytip .arrow').css({
-						borderColor: 'rgba(0, 0, 0, 0.8) transparent', 
+						borderColor: options.arrowColor + ' transparent', 
 						borderWidth: '6px 6px 0 6px', 
 						bottom: '-6px',
 						left: '50%'
 					});
 				} else if (tt.fPos === 'bottom') {
 					$('#tinytip .arrow').css({
-						borderColor: 'transparent transparent rgba(0, 0, 0, 0.8) transparent', 
+						borderColor: 'transparent transparent ' + options.arrowColor + ' transparent', 
 						borderWidth: '0 6px 6px 6px', 
 						top: '-6px',
 						left: '50%'
 					});
 				} else if (tt.fPos === 'left') {
 					$('#tinytip .arrow').css({
-						borderColor: 'transparent transparent transparent rgba(0, 0, 0, 0.8)', 
+						borderColor: 'transparent transparent transparent' + options.arrowColor, 
 						borderWidth: '6px 0 6px 6px', 
 						top: ((tt.h/2)-6)+'px',
 						right: '-6px'
