@@ -108,7 +108,12 @@
 			tip.hide()
 
 			tip.css({top: 0, left: 0});
-			tip.append($(this).attr('tt'));
+
+            if($.isFunction(options.content)){
+                tip.append(options.content($(this)));
+            }else{
+                tip.append($(this).attr('tt'));
+            }
 
 			var pos = $(this).position();
 
